@@ -1,0 +1,191 @@
+name: Autograding Tests
+'on':
+  - push
+  - repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Test_initializeBoard
+        id: Test_initializeBoard
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_initializeBoard
+          setup-command: npm install
+          command: npm test -- -t "initializeBoard coloca las piezas iniciales en su lugar"
+          timeout: 10
+          max-score: 10
+      - name: Test_selectPiece
+        id: Test_selectPiece
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_selectPiece
+          setup-command: npm install
+          command: npm test -- -t "guarda la pieza seleccionada y sus coordenadas"
+          timeout: 10
+          max-score: 3
+      - name: Test_resetSelection
+        id: Test_resetSelection
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_resetSelection
+          setup-command: npm install
+          command: npm test -- -t "elimina la selección activa"
+          timeout: 10
+          max-score: 3
+      - name: Test_updateBoard
+        id: Test_updateBoard
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_updateBoard
+          setup-command: npm install
+          command: npm test -- -t "mueve la pieza de origen a destino y deja origen vacía"
+          timeout: 10
+          max-score: 5
+      - name: Test_countPieces_1
+        id: Test_countPieces_1
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_countPieces_1
+          setup-command: npm install
+          command: npm test -- -t "debe devolver piezas correctas al inicio"
+          timeout: 10
+          max-score: 10
+      - name: Test_countPieces_2
+        id: Test_countPieces_2
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_countPieces_2
+          setup-command: npm install
+          command: npm test -- -t "funciona si se eliminan o agregan piezas"
+          timeout: 10
+          max-score: 5
+      - name: Test_isMoveValid_1
+        id: Test_isMoveValid_1
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_isMoveValid_1
+          setup-command: npm install
+          command: npm test -- -t "permite movimientos diagonales simples de avance"
+          timeout: 10
+          max-score: 10
+      - name: Test_isMoveValid_2
+        id: Test_isMoveValid_2
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_isMoveValid_2
+          setup-command: npm install
+          command: npm test -- -t "permite movimientos de captura sólo si isCaptureValid lo permite"
+          timeout: 10
+          max-score: 8
+      - name: Test_isMoveValid_3
+        id: Test_isMoveValid_3
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_isMoveValid_3
+          setup-command: npm install
+          command: npm test -- -t "isMoveValid devuelve false fuera de límites o celda ocupada"
+          timeout: 10
+          max-score: 5
+      - name: Test_movePiece
+        id: Test_movePiece
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_movePiece
+          setup-command: npm install
+          command: npm test -- -t "no mueve si el movimiento es inválido y alerta"
+          timeout: 10
+          max-score: 10
+      - name: Test_isCaptureValid_1
+        id: Test_isCaptureValid_1
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_isCaptureValid_1
+          setup-command: npm install
+          command: npm test -- -t "devuelve true si hay una pieza rival para capturar y casilla destino libre"
+          timeout: 10
+          max-score: 5
+      - name: Test_isCaptureValid_2
+        id: Test_isCaptureValid_2
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_isCaptureValid_2
+          setup-command: npm install
+          command: npm test -- -t "devuelve false si la ficha rival no existe"
+          timeout: 10
+          max-score: 5
+      - name: Test_isCaptureValid_3
+        id: Test_isCaptureValid_3
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_isCaptureValid_3
+          setup-command: npm install
+          command: npm test -- -t "devuelve false si se salta la propia ficha"
+          timeout: 10
+          max-score: 3
+      - name: Test_handleCapture_1
+        id: Test_handleCapture_1
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_handleCapture_1
+          setup-command: npm install
+          command: npm test -- -t "elimina sólo la ficha capturada para saltos de dos"
+          timeout: 10
+          max-score: 5
+      - name: Test_handleCapture_2
+        id: Test_handleCapture_2
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_handleCapture_2
+          setup-command: npm install
+          command: npm test -- -t "no elimina fichas en movimiento normal"
+          timeout: 10
+          max-score: 3
+      - name: Test_fetchGames
+        id: Test_fetchGames
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_fetchGames
+          setup-command: npm install
+          command: npm test -- -t "fetchGames obtiene y muestra las partidas en el DOM"
+          timeout: 10
+          max-score: 5
+      - name: Test_saveGame
+        id: Test_saveGame
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Test_saveGame
+          setup-command: npm install
+          command: npm test -- -t "saveGame envía los datos de la partida correctamente"
+          timeout: 10
+          max-score: 5
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          TEST_INITIALIZEBOARD_RESULTS: "${{steps.Test_initializeBoard.outputs.result}}"
+          TEST_SELECTPIECE_RESULTS: "${{steps.Test_selectPiece.outputs.result}}"
+          TEST_RESETSELECTION_RESULTS: "${{steps.Test_resetSelection.outputs.result}}"
+          TEST_UPDATEBOARD_RESULTS: "${{steps.Test_updateBoard.outputs.result}}"
+          TEST_COUNTPIECES_1_RESULTS: "${{steps.Test_countPieces_1.outputs.result}}"
+          TEST_COUNTPIECES_2_RESULTS: "${{steps.Test_countPieces_2.outputs.result}}"
+          TEST_ISMOVEVALID_1_RESULTS: "${{steps.Test_isMoveValid_1.outputs.result}}"
+          TEST_ISMOVEVALID_2_RESULTS: "${{steps.Test_isMoveValid_2.outputs.result}}"
+          TEST_ISMOVEVALID_3_RESULTS: "${{steps.Test_isMoveValid_3.outputs.result}}"
+          TEST_MOVEPIECE_RESULTS: "${{steps.Test_movePiece.outputs.result}}"
+          TEST_ISCAPTUREVALID_1_RESULTS: "${{steps.Test_isCaptureValid_1.outputs.result}}"
+          TEST_ISCAPTUREVALID_2_RESULTS: "${{steps.Test_isCaptureValid_2.outputs.result}}"
+          TEST_ISCAPTUREVALID_3_RESULTS: "${{steps.Test_isCaptureValid_3.outputs.result}}"
+          TEST_HANDLECAPTURE_1_RESULTS: "${{steps.Test_handleCapture_1.outputs.result}}"
+          TEST_HANDLECAPTURE_2_RESULTS: "${{steps.Test_handleCapture_2.outputs.result}}"
+          TEST_FETCHGAMES_RESULTS: "${{steps.Test_fetchGames.outputs.result}}"
+          TEST_SAVEGAME_RESULTS: "${{steps.Test_saveGame.outputs.result}}"
+
+        with:
+          runners: Test_initializeBoard,Test_selectPiece,Test_resetSelection,Test_updateBoard,Test_countPieces_1,Test_countPieces_2,Test_isMoveValid_1,Test_isMoveValid_2,Test_isMoveValid_3,Test_movePiece,Test_isCaptureValid_1,Test_isCaptureValid_2,Test_isCaptureValid_3,Test_handleCapture_1,Test_handleCapture_2,Test_fetchGames,Test_saveGame

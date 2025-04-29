@@ -1,0 +1,67 @@
+{
+  "games": [
+    {
+      "id": "1",
+      "winner": "Blancas",
+      "moves": 42,
+      "duration": "15:32",
+      "date": "2025-04-28T10:30:00Z"
+    },
+    {
+      "id": "2",
+      "winner": "Negras",
+      "moves": 38,
+      "duration": "12:47",
+      "date": "2025-04-27T17:45:00Z"
+    },
+    {
+      "id": "edd8",
+      "winner": "Negras",
+      "moves": 44,
+      "duration": "0:42",
+      "date": "2025-04-28T22:47:07.552Z"
+    },
+    {
+      "id": "8439",
+      "winner": "Negras",
+      "moves": 44,
+      "duration": "0:46",
+      "date": "2025-04-28T22:50:43.825Z"
+    },
+    {
+      "id": "cb55",
+      "winner": "Blancas",
+      "moves": 87,
+      "duration": "1:33",
+      "date": "2025-04-29T01:25:15.992Z"
+    },
+    {
+      "id": "8426",
+      "winner": "Blancas",
+      "moves": 79,
+      "duration": "1:50",
+      "date": "2025-04-29T01:27:16.308Z"
+    },
+    {
+      "id": "0a04",
+      "winner": "Blancas",
+      "moves": 63,
+      "duration": "6:47",
+      "date": "2025-04-29T01:48:46.505Z"
+    },
+    {
+      "id": "6bf5",
+      "winner": "Blancas",
+      "moves": 69,
+      "duration": "1:12",
+      "date": "2025-04-29T02:05:01.104Z"
+    },
+    {
+      "id": "0762",
+      "winner": "Blancas",
+      "moves": 71,
+      "duration": "1:12",
+      "date": "2025-04-29T02:07:39.855Z"
+    }
+  ]
+}

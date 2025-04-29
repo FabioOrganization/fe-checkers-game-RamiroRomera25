@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Juego de Damas</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-800 flex flex-col items-center justify-center min-h-screen gap-8 p-8">
+<h1 class="text-3xl font-bold text-white my-4">Juego de Damas</h1>
+<div id="game" class="grid grid-cols-8 gap-1"></div>
+<div class="flex gap-4 my-4">
+  <button id="fetchGamesBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+    Obtener Partidas
+  </button>
+</div>
+<div id="gamesList" class="text-white w-full max-w-2xl mt-6 space-y-2"></div>
+<script type="module" src="index.js"></script>
+</body>
+</html>
