@@ -11,7 +11,7 @@ globalThis.moveCount = 0;
 globalThis.gameStartedAt = Date.now();
 globalThis.board = [];
 globalThis.selectedPiece = null;
-globalThis.selectedPieceCoords = null;
+globalThis.selectedPieceCoords = {row : null, col: null};
 
 // ========== INICIALIZAR ==========
 document.addEventListener('DOMContentLoaded', () => {
@@ -98,24 +98,24 @@ function selectPiece(piece, row, col) {
 }
 
 function resetSelection() {
-    // PASO 1: Elimina la selección activa, borrando las variables globales.
+    // PASO 1: Elimina la selección activa, borrando la data de las variables globales.
     //(usa selectedPiece y selectedPieceCoords)
 }
 
 function movePiece(fromRow, fromCol, toRow, toCol, skipTurn = false) {
     // PASO 1: Comprueba que el movimiento es válido (usa isMoveValid).
-    // PASO 2: Si no es válido, avisa y detén el proceso.
+    // PASO 2: Si no es válido, avisa, detén el proceso y envía un alert "Movimiento inválido".
     // PASO 3: Si es válido, procesa la captura si existe (usa handleCapture).
     // PASO 4: Actualiza el tablero (usa updateBoard).
-    // PASO 5: Aumenta el contador de movimientos.
-    // PASO 6: Si corresponde, cambia de turno.
-    // PASO 7: Verifica si el juego ha terminado.
+    // PASO 5: Aumenta el contador de movimientos utiliza la variable global moveCount.
+    // PASO 6: Si corresponde, cambia de turno utiliza el método (switchTurn).
+    // PASO 7: Verifica si el juego ha terminado utiliza el método (checkGameEnd).
     // PASO 8: Devuelve true si se movió, false si no.
 }
 function handleCapture(fromRow, fromCol, toRow, toCol) {
     // PASO 1: Verifica si el movimiento fue de dos filas (salto).
     // PASO 2: Si fue así, localiza la ficha que ha sido saltada (posición intermedia).
-    // PASO 3: Elimina la ficha saltada (coloca null en esa posición en el tablero).
+    // PASO 3: Elimina la ficha saltada (coloca null en esa posición en el tablero) utiliza el método (isCaptureValid).
     // PASO 4: Devuelve true si hubo captura, false si no.
 }
 
@@ -275,4 +275,4 @@ function resetGame() {
     initializeBoard();
     drawBoard();
 }
-module.exports = {initializeBoard, isMoveValid,fetchGames,saveGame,countPieces,handleCapture,isCaptureValid,selectPiece,resetSelection,updateBoard};
+module.exports = {initializeBoard, isMoveValid,fetchGames,saveGame,countPieces,handleCapture,isCaptureValid,selectPiece,resetSelection,updateBoard,movePiece};
