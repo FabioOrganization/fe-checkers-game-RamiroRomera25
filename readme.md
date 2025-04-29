@@ -73,7 +73,24 @@ Puedes visitar [http://localhost:3000/games](http://localhost:3000/games) en tu 
 - Trabaja cada función por separado, siguiendo los pasos.
 - Usa el feedback de los tests para ajustar tu código.
 - Si tienes dudas, pide ayuda mostrando el mensaje del test que falla.
+- **Recuerda usar las siguientes variables globales para el juego:**
 
+```javascript
+const PLAYER_WHITE = 'Blancas';
+const PLAYER_BLACK = 'Negras';
+const PIECE_WHITE = 'white';
+const PIECE_BLACK = 'black';
+const BOARD_SIZE = 8;
+
+const API_URL = 'http://localhost:3000/games';
+
+let currentPlayer = PLAYER_WHITE;
+globalThis.moveCount = 0;
+globalThis.gameStartedAt = Date.now();
+globalThis.board = [];
+globalThis.selectedPiece = null;
+globalThis.selectedPieceCoords = { row: null, col: null };
+```
 ---
 
 ## 🛠 **¿Cómo probar los tests?**
