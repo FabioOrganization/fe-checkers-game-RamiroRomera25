@@ -27,16 +27,36 @@ function setupEventListeners() {
 // ========== INICIALIZA EL TABLERO ==========
 function initializeBoard() {
     // PASO 1: Vacía el array global del tablero para no acumular más filas si ya existía uno previo.
+    globalThis.board = [];
+
+    // FIXME: No se si ponerlo todo en un mismo paso para menos confusion.
     // PASO 2: Crea 8 filas (usa BOARD_SIZE).
     // PASO 3: Para cada fila, crea un array de 8 columnas.
     // PASO 4: Para cada casilla determina si debe estar vacía, ser una ficha blanca o una ficha negra,
     // según la posición y usando la función getInitialPiece, y colócala en el tablero global.
+    for (let i = 0; i < BOARD_SIZE; i++) {
+        globalThis.board[i] = []
+        for (let j = 0; j < BOARD_SIZE; j++) {
+            globalThis.board[i][j] = getInitialPiece(i, j)
+        }
+    }
+
+
 }
 
 function getInitialPiece(row, col) {
     // PASO 1: Si la fila es de 0 a 2 y (row+col) es impar, retorna la ficha NEGRA (usa PIECE_BLACK).
-    // PASO 2: Si la fila es de 5 a 7 y (row+col) es impar, retorna la ficha BLANCA (usa PIECE_WHITE).
+    if ((row+col) % 2 !== 0) {
+        if (row <= 2) {
+            return PIECE_BLACK;
+        }
+        // PASO 2: Si la fila es de 5 a 7 y (row+col) es impar, retorna la ficha BLANCA (usa PIECE_WHITE).
+        if (row >= 5 && row <= 7) {
+            return PIECE_WHITE;
+        }
+    }
     // PASO 3: En cualquier otro caso, retorna null (casilla vacía).
+    return null;
 }
 
 // ========== DIBUJA EL TABLERO ==========
@@ -95,33 +115,98 @@ function handleCellClick(row, col) {
 function selectPiece(piece, row, col) {
     // PASO 1: Guarda la pieza seleccionada y sus coordenadas (fila/columna) en variables globales
     //        (usa selectedPiece y selectedPieceCoords).
+    // FIXME: Estaria bueno poner el formato de como debe ser selectedPieceCoords
+
+    globalThis.selectedPiece = piece
+    globalThis.selectedPieceCoords = { row: row, col: col }
 }
 
 function resetSelection() {
     // PASO 1: Elimina la selección activa, borrando las variables globales.
     //(usa selectedPiece y selectedPieceCoords)
+    // FIXME: Las borro poniendo undefined o null ? Estaria bueno aclararlo
+    globalThis.selectedPiece = null
+    globalThis.selectedPieceCoords = null
 }
 
+// FIXME: Para que es el skipTurn ? Si es algo que no tienen que hacer nada los chicos con esa variable lo aclararia
 function movePiece(fromRow, fromCol, toRow, toCol, skipTurn = false) {
     // PASO 1: Comprueba que el movimiento es válido (usa isMoveValid).
     // PASO 2: Si no es válido, avisa y detén el proceso.
+
+    // FIXME: No se especifica que mensaje debe tener el alert
+    if (!isMoveValid(fromRow, fromCol, toRow, toCol)) {
+        // alert("Movimiento no valido")
+        alert("Movimiento inválido")
+        return false;
+    }
+
     // PASO 3: Si es válido, procesa la captura si existe (usa handleCapture).
+    if (isCaptureValid((fromRow, fromCol, toRow, toCol))) {
+        handleCapture(fromRow, fromCol, toRow, toCol)
+    }
     // PASO 4: Actualiza el tablero (usa updateBoard).
+
+    updateBoard(fromRow, fromCol, toRow, toCol)
+
     // PASO 5: Aumenta el contador de movimientos.
+    // FIXME: Agregaria que es moveCount pq lo preguntarian en el parcial por las dudas jaja
+    globalThis.moveCount ++;
+
     // PASO 6: Si corresponde, cambia de turno.
+    // FIXME: Aclararia que metodo se usa
+    switchTurn()
+
     // PASO 7: Verifica si el juego ha terminado.
+    // FIXME: Aclararia que metodo se usa
+    checkGameEnd()
+
     // PASO 8: Devuelve true si se movió, false si no.
+    return true;
 }
+
+// FIXME: YO diria que en este metodo le digamos que usen isCapturedValid pq estarian repitiendo codigo
 function handleCapture(fromRow, fromCol, toRow, toCol) {
     // PASO 1: Verifica si el movimiento fue de dos filas (salto).
+
+    // if (!((rowMovement === 2 || rowMovement === -2) && (colMovement === 2 || colMovement === -2))) {
+    //     return;
+    // }
+
     // PASO 2: Si fue así, localiza la ficha que ha sido saltada (posición intermedia).
+
+    let pivotRow;
+    let pivotCol;
+
+    if (fromRow > toRow) {
+        pivotRow = toRow + 1;
+    } else {
+        pivotRow = toRow - 1;
+    }
+
+    if (fromCol > toCol) {
+        pivotCol = toCol + 1;
+    } else {
+        pivotCol = toCol - 1;
+    }
+
     // PASO 3: Elimina la ficha saltada (coloca null en esa posición en el tablero).
+
+    if (isCaptureValid(fromRow, fromCol, toRow, toCol)) {
+        globalThis.board[pivotRow][pivotCol] = null;
+        return true;
+    }
+    return false;
+
     // PASO 4: Devuelve true si hubo captura, false si no.
+
 }
 
 function updateBoard(fromRow, fromCol, toRow, toCol) {
     // PASO 1: Mueve la pieza de la casilla origen a la destino.
+    globalThis.board[toRow][toCol] = globalThis.board[fromRow][fromCol];
     // PASO 2: Deja la casilla origen vacía (null).
+    globalThis.board[fromRow][fromCol] = null;
 }
 
 function switchTurn() {
@@ -150,11 +235,33 @@ function countPieces(pieceType) {
 function isMoveValid(fromRow, fromCol, toRow, toCol) {
     // PASO 1: Verifica que la casilla destino está dentro de los límites del tablero
     //         y esté vacía. Usa la función isWithinBounds.
+
+    // FIXME: No especifica que no si no esta dentro del tableto o vacia devuelva false.
+    if (!isWithinBounds(toRow, toCol) || globalThis.board[toRow][toCol] !== null) {
+        return false;
+    }
+
     // PASO 2: Comprueba que el movimiento es diagonal (¡usa la diferencia entre filas y columnas!).
+
+    const rowMovement = fromRow - toRow;
+    const colMovement = fromCol - toCol;
+
+    let validMovement = false;
+
+
     // PASO 3: Si el movimiento es de una sola casilla, permítelo como válido (movimiento normal).
+    if (((rowMovement === 1 || rowMovement === -1) && (colMovement === 1 || colMovement === -1))) {
+        validMovement = true;
+    }
+
     // PASO 4: Si el movimiento es de dos casillas, llama a isCaptureValid
     //         para ver si se trata de una captura válida (salto por encima de rival).
+    else if (((rowMovement === 2 || rowMovement === -2) && (colMovement === 2 || colMovement === -2))) {
+        validMovement = isCaptureValid(fromRow, fromCol, toRow, toCol)
+    }
+
     // PASO 5: En cualquier otra situación, el movimiento no es válido.
+    return validMovement;
 }
 
 function isWithinBounds(row, col) {
@@ -164,11 +271,39 @@ function isWithinBounds(row, col) {
 function isCaptureValid(fromRow, fromCol, toRow, toCol) {
     // PASO 1: Calcula la posición intermedia entre la casilla de origen y destino.
     //         (Usa la media/arreglo del índice de fila y columna)
+
+    let pivotRow;
+    let pivotCol;
+
+    if (fromRow > toRow) {
+        pivotRow = toRow + 1;
+    } else {
+        pivotRow = toRow - 1;
+    }
+
+    if (fromCol > toCol) {
+        pivotCol = toCol + 1;
+    } else {
+        pivotCol = toCol - 1;
+    }
+
     // PASO 2: Asegúrate que la posición intermedia es válida dentro de los límites del tablero.
+
+    if (!isWithinBounds(pivotRow, pivotCol)) {
+        return;
+    }
+
     // PASO 3: Busca (en el tablero) la pieza de la casilla intermedia.
+
+    const capturedPiece = globalThis.board[pivotRow][pivotCol]
+
     // PASO 4: Devuelve true SOLO si hay una ficha rival en esa casilla (es decir,
     //         que no sea null y sea diferente a la actual).
+    // FIXME:  que no sea null y sea diferente a la pieza seleccionada). O se refiere a obtener el lugar de la ficha from ?
+
     // PASO 5: Si no se cumplen las condiciones anteriores, devuelve false.
+    return capturedPiece !== globalThis.board[fromRow][fromCol] && capturedPiece !== null
+
 }
 
 // ========== LÓGICA DEL CPU ==========
@@ -217,14 +352,39 @@ function getValidMovesForPiece(row, col) {
 // ========== GESTIÓN DEL JUEGO ==========
 async function saveGame(winner) {
     // PASO 1: Crea un objeto con los datos de la partida:
+    // FIXME: Aclararia que ante cualquier duda miren la respuestas del http://localhost:3000/games
     // DEBES USAR LA VARIABLE API_URL
     //         - ganador (winner)
     //         - cantidad de movimientos (moveCount)
     //         - duración (usa formatGameDuration())
     //         - fecha (usa new Date().toISOString())
+
+    const body = {
+        winner: winner,
+        moves: globalThis.moveCount,
+        duration: formatGameDuration(),
+        date: new Date().toISOString()
+    }
+
     // PASO 2: Envía los datos al servidor usando fetch en POST con Content-Type adecuado.
+
+    try {
+        await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        })
+            .then(response => response.json())
+            .then(data => console.log("Partida guardada"))
+
+    } catch (e) {
+        // PASO 4: Si ocurre un error, manéjalo mostrando el error por consola.
+        console.error(e)
+    }
+
     // PASO 3: (Opcional) Muestra por consola si el guardado fue exitoso.
-    // PASO 4: Si ocurre un error, manéjalo mostrando el error por consola.
 
 }
 function formatGameDuration() {
@@ -237,9 +397,16 @@ function formatGameDuration() {
 async function fetchGames() {
     // PASO 1: Haz una petición (fetch) al backend para obtener las partidas (GET).
     // DEBES USAR LA VARIABLE API_URL
-    // PASO 2: Espera la respuesta y transfórmala en un objeto/array (JSON).
-    // PASO 3: Llama a displayGames con el array recibido.
-    // PASO 4: Si falla la petición, muestra el error en un alert.
+    try {
+        // PASO 2: Espera la respuesta y transfórmala en un objeto/array (JSON).
+        await fetch(API_URL)
+            .then(response => response.json())
+            // PASO 3: Llama a displayGames con el array recibido.
+            .then(data => displayGames(data))
+    } catch (e) {
+        // PASO 4: Si falla la petición, muestra el error en un alert.
+        alert(e)
+    }
 }
 function displayGames(games) {
     const historyDiv = document.getElementById('gamesList');
@@ -275,4 +442,6 @@ function resetGame() {
     initializeBoard();
     drawBoard();
 }
-module.exports = {initializeBoard, isMoveValid,fetchGames,saveGame,countPieces,handleCapture,isCaptureValid,selectPiece,resetSelection,updateBoard};
+
+// FIXME: No estaba el movePiece en los exports
+module.exports = {initializeBoard, isMoveValid,fetchGames,saveGame,countPieces,handleCapture,isCaptureValid,selectPiece,resetSelection,updateBoard, movePiece};
